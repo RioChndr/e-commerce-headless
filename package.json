@@ -7,8 +7,10 @@
   "scripts": {
     "server:dev": "cd packages/server && yarn run start:dev",
     "admin:dev": "cd packages/admin && yarn dev",
-    "admin:build": "cd packages/admin && yarn generate"
+    "admin:build": "cd packages/admin && yarn generate",
+    "build": "lerna exec -- yarn build"
   },
-  "npmClient": "yarn",
-  "useWorkspaces": true
+  "workspaces": [
+    "packages/*"
+  ]
 }
