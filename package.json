@@ -1,0 +1,14 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "scripts": {
+    "server:dev": "cd packages/server && yarn run start:dev",
+    "admin:dev": "cd packages/admin && yarn dev",
+    "admin:build": "cd packages/admin && yarn generate"
+  },
+  "npmClient": "yarn",
+  "useWorkspaces": true
+}
