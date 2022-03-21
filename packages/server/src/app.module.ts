@@ -1,20 +1,18 @@
 import { Module } from '@nestjs/common';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { AdminDistLocation, CheckAdminExist } from 'utils/server-admin';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ReposModule } from './database/repos/repos.module';
+import { ApiModule } from './api/api.module';
+import { RouterModule } from '@nestjs/core';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: AdminDistLocation,
-    }),
+    ReposModule,
+    ApiModule,
+    RouterModule.register([
+      {
+        path: 'api',
+        module: ApiModule,
+      },
+    ]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
-export class AppModule {
-  onModuleInit() {
-    CheckAdminExist();
-  }
-}
+export class AppModule {}
