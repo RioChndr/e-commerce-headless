@@ -6,11 +6,13 @@ import { RouteParent } from './route-parent';
 import { AdminNuxtService } from './middleware/admin-nuxt.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthModule } from './api/auth/auth.module';
 
 @Module({
   imports: [
     DatabaseModule,
     ApiModule,
+    AuthModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../..', '/admin/static'),
       serveRoot: '/static',
@@ -19,6 +21,10 @@ import { join } from 'path';
       {
         path: RouteParent.server.api,
         module: ApiModule,
+      },
+      {
+        path: RouteParent.server.api,
+        module: AuthModule,
       },
     ]),
   ],

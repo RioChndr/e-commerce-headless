@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { DbConnectorService } from '../connector/db-connector.service';
 import * as bcrypt from 'bcrypt';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Injectable()
 export class UserRepository {
@@ -64,7 +65,9 @@ export class PasswordNotMatchException extends Error {
   message = 'Password are not correct';
 }
 
-export interface UserCred {
+export class UserCred {
+  @ApiProperty()
   email: string;
+  @ApiProperty()
   password: string;
 }

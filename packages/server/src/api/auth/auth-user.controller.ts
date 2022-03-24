@@ -11,6 +11,7 @@ export class AuthUserController {
     try {
       return await this.authService.login(body);
     } catch (err) {
+      console.log(err);
       throw new BadRequestException(err);
     }
   }

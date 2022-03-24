@@ -13,8 +13,8 @@ export class RegisterUserController {
   @Post('register')
   async register(@Body() body: UserCred) {
     try {
-      const user = await this.registerUserService.register(body);
-      const token = await this.authService.login(user);
+      await this.registerUserService.register({ ...body });
+      const token = await this.authService.login({ ...body });
       return token;
     } catch (err) {
       throw new BadRequestException(err);
