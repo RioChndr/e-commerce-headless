@@ -49,18 +49,15 @@ export class AuthGuard implements CanActivate {
   }
 
   async validateRole(user: UserWithAdminRole, context: ExecutionContext) {
-    const roles = this.reflector.get<RoleType[]>(
-      ROLE_KEY,
-      context.getHandler(),
-    );
-    if (roles.length === 0) return;
+    const roles = this.reflector.get<RoleType>(ROLE_KEY, context.getHandler());
+    if (!roles) return true;
 
-    if (roles.some((role) => RoleType.ADMIN === role)) {
-      if (!user.adminUser) {
-        return false;
-      }
-      return true;
+    if (roles === RoleType.ADMIN) {
+      return !!user.adminUser;
     }
-    return true;
+    if (roles === RoleType.USER) {
+      return !!user;
+    }
+    return false;
   }
 }

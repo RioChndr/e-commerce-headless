@@ -7,7 +7,7 @@ export enum RoleType {
   USER = 'USER',
 }
 
-export const Role = (...role: RoleType[]) => SetMetadata(ROLE_KEY, role);
+export const Role = (role: RoleType) => SetMetadata(ROLE_KEY, role);
 
 export const RoleOnlyAdmin = () => Role(RoleType.ADMIN);
 
