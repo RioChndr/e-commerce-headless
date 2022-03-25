@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ApiModule } from './api/api.module';
 import { RouterModule } from '@nestjs/core';
-import { DatabaseModule } from './database/databaes.module';
+import { DatabaseModule } from './database/database.module';
 import { RouteParent } from './route-parent';
 import { AdminNuxtService } from './middleware/admin-nuxt.service';
 import { ServeStaticModule } from '@nestjs/serve-static';

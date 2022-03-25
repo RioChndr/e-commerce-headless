@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { Prisma, PrismaClient, User } from '@prisma/client';
 import { DbConnectorService } from '../connector/db-connector.service';
 import * as bcrypt from 'bcrypt';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserWithAdminRole } from './type/user.type';
 
 @Injectable()
 export class UserRepository {
@@ -12,9 +13,8 @@ export class UserRepository {
     return this.dbService.user;
   }
 
-  hideCred(user: User) {
+  hideCred(user: UserWithAdminRole | User) {
     delete user.password;
-    return user;
   }
 
   async register(user: Prisma.UserCreateInput) {
@@ -24,7 +24,9 @@ export class UserRepository {
     const resultCreate = await this.user().create({
       data: user,
     });
-    return this.hideCred(resultCreate);
+    this.hideCred(resultCreate);
+
+    return resultCreate;
   }
 
   async login(userCred: UserCred) {
@@ -40,7 +42,9 @@ export class UserRepository {
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) throw new PasswordNotMatchException();
-    return this.hideCred(user);
+    this.hideCred(user);
+
+    return user;
   }
 
   async findUser(id: string) {
@@ -48,10 +52,14 @@ export class UserRepository {
       where: {
         id,
       },
+      include: {
+        adminUser: true,
+      },
     });
     if (!user) throw new UserNotFoundException();
 
-    return this.hideCred(user);
+    this.hideCred(user);
+    return user;
   }
 }
 
@@ -65,6 +73,7 @@ export class PasswordNotMatchException extends Error {
   message = 'Password are not correct';
 }
 
+// DTO user credential
 export class UserCred {
   @ApiProperty()
   email: string;
