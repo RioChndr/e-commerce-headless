@@ -5,6 +5,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { loadNuxt, build } from 'nuxt';
+import { AppConfig } from 'src/config/app.config';
 import { RouteParent } from 'src/route-parent';
 
 @Injectable()
@@ -20,6 +21,7 @@ export class AdminNuxtService
     }
   }
   async onModuleInit() {
+    if (!AppConfig.runWithAdmin) return;
     const isDev = process.env.NODE_ENV !== 'production';
     if (!this.nuxt) {
       this.nuxt = await loadNuxt(isDev ? 'dev' : 'start');

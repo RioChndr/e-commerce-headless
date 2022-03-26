@@ -19,8 +19,12 @@ export class UserRepository {
 
   async register(user: Prisma.UserCreateInput) {
     if (user.password) {
-      user.password = await bcrypt.hash(user.password, bcrypt.genSaltSync());
+      user.password = await this.hashPassword(user.password);
     }
+    if (await this.findUser({ email: user.email })) {
+      throw new EmailRegisteredException();
+    }
+
     const resultCreate = await this.user().create({
       data: user,
     });
@@ -33,33 +37,48 @@ export class UserRepository {
     const { email, password } = userCred;
     if (!email || !password) throw 'Credential is empty';
 
-    const user = await this.user().findUnique({
-      where: {
-        email,
-      },
-    });
+    const user = await this.findUser({ email }, false);
     if (!user) throw new UserNotFoundException();
 
-    const isValid = await bcrypt.compare(password, user.password);
+    const isValid = await this.validatePassword(password, user.password);
     if (!isValid) throw new PasswordNotMatchException();
     this.hideCred(user);
 
     return user;
   }
 
-  async findUser(id: string) {
+  async findUser(
+    selectUser: { [key in keyof User]?: any },
+    excludePassword = true,
+  ) {
     const user = await this.user().findUnique({
-      where: {
-        id,
-      },
+      where: selectUser,
       include: {
         adminUser: true,
       },
     });
-    if (!user) throw new UserNotFoundException();
+    if (!user) return null;
 
-    this.hideCred(user);
+    if (excludePassword) this.hideCred(user);
     return user;
+  }
+
+  async changePassword(userId: string, password: string) {
+    const passwordHashed = await this.hashPassword(password);
+    return this.user().update({
+      where: { id: userId },
+      data: {
+        password: passwordHashed,
+      },
+    });
+  }
+
+  hashPassword(password: string) {
+    return bcrypt.hash(password, bcrypt.genSaltSync());
+  }
+
+  validatePassword(passwordInput: string, passwordHashed: string) {
+    return bcrypt.compare(passwordInput, passwordHashed);
   }
 }
 
@@ -71,6 +90,11 @@ export class UserNotFoundException extends Error {
 export class PasswordNotMatchException extends Error {
   name = 'PasswordNotMatchException';
   message = 'Password are not correct';
+}
+
+export class EmailRegisteredException extends Error {
+  name = 'EmailRegisteredException';
+  message = 'Email has been registered';
 }
 
 // DTO user credential
