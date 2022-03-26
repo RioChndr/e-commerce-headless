@@ -17,6 +17,7 @@ export class RegisterUserController {
       const token = await this.authService.login({ ...body });
       return token;
     } catch (err) {
+      console.log(err);
       throw new BadRequestException(err);
     }
   }

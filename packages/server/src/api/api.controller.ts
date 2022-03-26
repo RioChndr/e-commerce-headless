@@ -1,7 +1,6 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { RoleOnlyAdmin } from 'src/decorators/Role.decorator';
-import { AuthGuard } from './auth/authrorization/authorization.guard';
+import { NeedAuth } from 'src/decorators/need-auth.decorator';
+import { RoleType } from 'src/decorators/Role.decorator';
 
 @Controller()
 export class ApiController {
@@ -10,11 +9,15 @@ export class ApiController {
     return 'Hello world 123';
   }
 
-  @ApiBearerAuth()
-  @RoleOnlyAdmin()
-  @UseGuards(AuthGuard)
+  @NeedAuth()
   @Get('secret')
   secret(@Req() request: any) {
     return `secreet, hello ${JSON.stringify(request.user)}`;
+  }
+
+  @NeedAuth(RoleType.ADMIN)
+  @Get('secret-admin')
+  secretAdmin(@Req() request: any) {
+    return `secreet admin, hello ${JSON.stringify(request.user)}`;
   }
 }
