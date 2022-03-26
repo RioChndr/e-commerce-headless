@@ -28,6 +28,7 @@ import { AuthModule } from './api/auth/auth.module';
       },
     ]),
   ],
+  exports: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
