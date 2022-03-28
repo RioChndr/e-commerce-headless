@@ -1,10 +1,6 @@
 import { DatabaseModule } from 'src/database/database.module';
-import { Test } from '@nestjs/testing';
-import {
-  PasswordNotMatchException,
-  UserCred,
-  UserRepository,
-} from 'src/database/repos/user.repository';
+import { Test, TestingModule } from '@nestjs/testing';
+import { UserCred } from 'src/database/repos/user.repository';
 import { AuthUserController } from './auth-user.controller';
 import { AuthService } from './auth.service';
 import { BadRequestException } from '@nestjs/common';
@@ -12,9 +8,10 @@ import { BadRequestException } from '@nestjs/common';
 describe('Test login auth user', () => {
   let authUserController: AuthUserController;
   let authService: AuthService;
+  let moduleRef: TestingModule;
 
-  beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({
+  beforeAll(async () => {
+    moduleRef = await Test.createTestingModule({
       imports: [DatabaseModule],
       controllers: [AuthUserController],
       providers: [AuthService],
@@ -22,6 +19,10 @@ describe('Test login auth user', () => {
 
     authService = moduleRef.get<AuthService>(AuthService);
     authUserController = moduleRef.get<AuthUserController>(AuthUserController);
+  });
+
+  afterAll(() => {
+    moduleRef.close();
   });
 
   describe('Test login', () => {

@@ -1,17 +1,27 @@
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { DatabaseModule } from '../database.module';
-import { UserRepository } from './user.repository';
+import {
+  EmailRegisteredException,
+  PasswordNotMatchException,
+  UserNotFoundException,
+  UserRepository,
+} from './user.repository';
 
 describe('Test User repository', () => {
   let userRepository: UserRepository;
+  let moduleRef: TestingModule;
 
-  beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({
+  beforeAll(async () => {
+    moduleRef = await Test.createTestingModule({
       imports: [DatabaseModule],
       providers: [UserRepository],
     }).compile();
 
     userRepository = moduleRef.get<UserRepository>(UserRepository);
+  });
+
+  afterAll(() => {
+    moduleRef.close();
   });
 
   it('model not null', () => {
@@ -58,5 +68,17 @@ describe('Test User repository', () => {
       passwordHashed,
     );
     expect(isValid).toBeFalsy();
+  });
+
+  describe('Error exception user repository', () => {
+    it('Exception UserNotFoundException found', () => {
+      expect(new UserNotFoundException()).toBeInstanceOf(Error);
+    });
+    it('Exception PasswordNotMatchException found', () => {
+      expect(new PasswordNotMatchException()).toBeInstanceOf(Error);
+    });
+    it('Exception EmailRegisteredException found', () => {
+      expect(new EmailRegisteredException()).toBeInstanceOf(Error);
+    });
   });
 });
