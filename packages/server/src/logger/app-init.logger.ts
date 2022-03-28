@@ -10,5 +10,5 @@ export function AppInitLogger() {
     `App Swagger run on localhost:${port}${RouteParent.server.swagger}`,
   );
   const pid = process.pid;
-  logger.log(`Your pid123 : ${pid}`);
+  logger.log(`Your pid : ${pid}`);
 }
