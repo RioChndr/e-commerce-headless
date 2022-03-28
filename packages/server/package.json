@@ -94,6 +94,11 @@
     "testEnvironment": "node",
     "modulePaths": [
       "<rootDir>"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/dist/",
+      "<rootDir>/node_modules/",
+      "<rootDir>/.nuxt/"
     ]
   },
   "prisma": {
