@@ -12,7 +12,6 @@ import { BadRequestException } from '@nestjs/common';
 describe('Test login auth user', () => {
   let authUserController: AuthUserController;
   let authService: AuthService;
-  let userRepository: UserRepository;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -23,7 +22,6 @@ describe('Test login auth user', () => {
 
     authService = moduleRef.get<AuthService>(AuthService);
     authUserController = moduleRef.get<AuthUserController>(AuthUserController);
-    userRepository = moduleRef.get<UserRepository>(UserRepository);
   });
 
   describe('Test login', () => {
