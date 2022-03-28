@@ -65,13 +65,13 @@ export class TokenVerifyRepository {
     return true;
   }
 
-  private getExpiredTime() {
+  getExpiredTime() {
     const expiredMinutes = 3;
     const now = new Date();
     return new Date(now.getTime() + 1000 * 60 * expiredMinutes);
   }
 
-  private isNotExpired(timeout: Date) {
+  isNotExpired(timeout: Date) {
     return new Date().getTime() < timeout.getTime();
   }
 
@@ -80,7 +80,7 @@ export class TokenVerifyRepository {
     return accessTime < maxAccess;
   }
 
-  private findTokenUser(userId: string) {
+  findTokenUser(userId: string) {
     return this.model().findUnique({
       where: {
         userId: userId,
