@@ -59,6 +59,7 @@
     "@types/node": "^16.0.0",
     "@types/nodemailer": "^6.4.4",
     "@types/supertest": "^2.0.11",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.0.1",
@@ -74,7 +75,8 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.10.1",
-    "typescript": "^4.6.2"
+    "typescript": "^4.6.2",
+    "uuid": "^8.3.2"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -99,6 +101,9 @@
       "<rootDir>/dist/",
       "<rootDir>/node_modules/",
       "<rootDir>/.nuxt/"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/__mock__/mock.ts"
     ]
   },
   "prisma": {
