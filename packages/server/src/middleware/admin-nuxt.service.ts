@@ -36,7 +36,6 @@ export class AdminNuxtService
   }
 
   isNotAdmin(url: string): boolean {
-    console.log(url);
     const listPrefix = Object.values(RouteParent.server);
     return listPrefix.some((prefix) => url.startsWith(prefix));
   }

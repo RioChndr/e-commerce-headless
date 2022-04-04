@@ -74,10 +74,12 @@ export class UserRepository {
   }
 
   hashPassword(password: string) {
+    if (!password) return null;
     return bcrypt.hash(password, bcrypt.genSaltSync());
   }
 
   validatePassword(passwordInput: string, passwordHashed: string) {
+    if (!passwordInput || !passwordHashed) return false;
     return bcrypt.compare(passwordInput, passwordHashed);
   }
 }
